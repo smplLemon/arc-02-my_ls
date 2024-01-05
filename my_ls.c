@@ -1,38 +1,36 @@
 #include "my_ls.h"
 
-// sets the flags and returns the count of flags as arguments given to the program
-int setFlags(int ac, char** av, bool* flagA, bool* flagT) {
+
+int set_flags(int ac, char** av, bool* flag_a, bool* flag_t) {
     if (ac == 2) {
         if (my_str_eql(av[1], "-a")) {
-            *flagA = true;
+            *flag_a = true;
         } else if (my_str_eql(av[1], "-t")) {
-            *flagT = true;
+            *flag_t = true;
         } else if (my_str_eql(av[1], "-at") || my_str_eql(av[1], "-ta")) {
-            *flagA = true;
-            *flagT = true;
+            *flag_a = true;
+            *flag_t = true;
             return 1;
         }
     } else if (ac >= 3) {
-        // checking for the first argument and setting flag
         if (my_str_eql(av[1], "-a")) {
-            *flagA = true;
+            *flag_a = true;
         } else if (my_str_eql(av[1], "-t")) {
-            *flagT = true;
+            *flag_t = true;
         } else if (my_str_eql(av[1], "-at") || my_str_eql(av[1], "-ta")) {
-            *flagA = true;
-            *flagT = true;
+            *flag_a = true;
+            *flag_t = true;
             return 1;
         }
 
-        // checking for the second argument and setting flag
-        if (my_str_eql(av[2], "-a") && !*flagA) {
-            *flagA = true;
-        } else if (my_str_eql(av[2], "-t") && !*flagT) {
-            *flagT = true;
+        if (my_str_eql(av[2], "-a") && !*flag_a) {
+            *flag_a = true;
+        } else if (my_str_eql(av[2], "-t") && !*flag_t) {
+            *flag_t = true;
         }
         
     } 
-    return (int) *flagA + (int) *flagT;
+    return (int) *flag_a + (int) *flag_t;
 }
 
 void swap(char* str1, char* str2) {
@@ -42,26 +40,24 @@ void swap(char* str1, char* str2) {
     my_str_copy(str2, temp);
 }
 
-void timelex_sort(char* dirStr, char* first, char* second) {
+void timelex_sort(char* dir_str, char* first, char* second) {
 
-    // Building the path to the first and seconf file
     struct stat buffer;
     struct stat buffer2;
-    char dirStrCopy[MAX_LEN] = "";
-    char dirStrCopy2[MAX_LEN] = "";
-    my_str_cat(dirStrCopy, dirStr);
-    my_str_cat(dirStrCopy, "/");
-    my_str_cat(dirStrCopy2, dirStr);
-    my_str_cat(dirStrCopy2, "/");
+    char dir_str_copy[MAX_LEN] = "";
+    char dir_str_copy2[MAX_LEN] = "";
+    my_str_cat(dir_str_copy, dir_str);
+    my_str_cat(dir_str_copy, "/");
+    my_str_cat(dir_str_copy2, dir_str);
+    my_str_cat(dir_str_copy2, "/");
 
-    // Getting the seconds and the nano seconds of the files
-    my_str_cat(dirStrCopy, first);
-    lstat(dirStrCopy, &buffer);
+    my_str_cat(dir_str_copy, first);
+    lstat(dir_str_copy, &buffer);
     __time_t sec = buffer.st_mtim.tv_sec;
     __time_t nsec = buffer.st_mtim.tv_nsec;
 
-    my_str_cat(dirStrCopy2, second);
-    lstat(dirStrCopy2, &buffer2);
+    my_str_cat(dir_str_copy2, second);
+    lstat(dir_str_copy2, &buffer2);
     __time_t sec2 = buffer2.st_mtim.tv_sec;
     __time_t nsec2 = buffer2.st_mtim.tv_nsec;
     
@@ -76,11 +72,11 @@ void timelex_sort(char* dirStr, char* first, char* second) {
     }
 }
 
-void lex_or_timelex_sort(char* dirStr, char array[][MAX_LEN], int str_count, bool flagT) {
+void lex_or_timelex_sort(char* dir_str, char array[][MAX_LEN], int str_count, bool flag_t) {
     for (int i = 0; i < str_count - 1; i++) {
         for (int j = 0; j < str_count - i - 1; j++) {
-            if (flagT) {
-               timelex_sort(dirStr, array[j], array[j+1]);
+            if (flag_t) {
+               timelex_sort(dir_str, array[j], array[j+1]);
             } else {
                 if (my_str_cmp(array[j], array[j+1]) > 0) {
                     swap(array[j], array[j + 1]);
@@ -90,116 +86,115 @@ void lex_or_timelex_sort(char* dirStr, char array[][MAX_LEN], int str_count, boo
     }
 }
 
-void setAllFilesAndDirsCount(int* fileCount, int* dirCount, int countFlags, int ac,  char av[][MAX_LEN]) {
+void set_all_files_and_dirs_count(int* file_count, int* dir_count, int count_flags, int ac,  char av[][MAX_LEN]) {
     DIR* dir;
-    for (int indexOperand = countFlags+1; indexOperand < ac; indexOperand++) {
-        dir = opendir(av[indexOperand]);
+    for (int index_operand = count_flags+1; index_operand < ac; index_operand++) {
+        dir = opendir(av[index_operand]);
         if (dir == NULL) {
-            *fileCount = *fileCount + 1;
+            *file_count = *file_count + 1;
         } else {
-            *dirCount = *dirCount + 1;
+            *dir_count = *dir_count + 1;
         }
         closedir(dir);
     }
 }
 
-void fillFileAndDirArrays(char files[][MAX_LEN], char dirs[][MAX_LEN], int countFlags, int ac, char av[][MAX_LEN]) {
+void fill_file_and_dir_arrays(char files[][MAX_LEN], char dirs[][MAX_LEN], int count_flags, int ac, char av[][MAX_LEN]) {
     DIR* dir;
-    int fileIndex = 0;
-    int dirIndex = 0;
-    for (int indexOperand = countFlags+1; indexOperand < ac; indexOperand++) {
-        dir = opendir(av[indexOperand]);
+    int file_index = 0;
+    int dir_index = 0;
+    for (int index_operand = count_flags+1; index_operand < ac; index_operand++) {
+        dir = opendir(av[index_operand]);
         if (dir == NULL) {
-            my_str_copy(files[fileIndex], av[indexOperand]);
-            fileIndex++;
+            my_str_copy(files[file_index], av[index_operand]);
+            file_index++;
         } else {
-            my_str_copy(dirs[dirIndex], av[indexOperand]);
-            dirIndex++;
+            my_str_copy(dirs[dir_index], av[index_operand]);
+            dir_index++;
         }
         closedir(dir);
     }
 }
 
-void setDirCount(int* dirCount, char* dirStr, bool flagA) {
+void set_dir_count(int* dir_count, char* dir_str, bool flag_a) {
     struct dirent* entry;
-    DIR* dir = opendir(dirStr);
+    DIR* dir = opendir(dir_str);
 
     while ((entry = readdir(dir)) != NULL) {
         char* name = entry->d_name;
-        if (!flagA && name[0] == '.') {
+        if (!flag_a && name[0] == '.') {
             continue;
         }
-        *dirCount = *dirCount + 1;
+        *dir_count = *dir_count + 1;
     }
     closedir(dir);
 }
 
-void fillDirArray(char files[][MAX_LEN], char* dirStr, bool flagA) {
+void fill_dir_array(char files[][MAX_LEN], char* dir_str, bool flag_a) {
     struct dirent* entry;
-    DIR* dir = opendir(dirStr);
-    int dirIndex = 0;
+    DIR* dir = opendir(dir_str);
+    int dir_index = 0;
 
     while ((entry = readdir(dir)) != NULL) {
         char* name = entry->d_name;
-        if (!flagA && name[0] == '.') {
+        if (!flag_a && name[0] == '.') {
             continue;
         }
-        my_str_copy(files[dirIndex], name);
-        dirIndex++;
+        my_str_copy(files[dir_index], name);
+        dir_index++;
     }
     closedir(dir);
 }
 
-void printDirEntries(char* dirStr, bool flagA, bool flagT) {
-    int dirCount = 0;
-    setDirCount(&dirCount, dirStr, flagA);
-    char dir_array[dirCount][MAX_LEN];
-    fillDirArray(dir_array, dirStr, flagA);
-    lex_or_timelex_sort(dirStr, dir_array, dirCount, flagT);
-    print_str_array(dir_array, dirCount);
+void print_dir_entries(char* dir_str, bool flag_a, bool flag_t) {
+    int dir_count = 0;
+    set_dir_count(&dir_count, dir_str, flag_a);
+    char dir_array[dir_count][MAX_LEN];
+    fill_dir_array(dir_array, dir_str, flag_a);
+    lex_or_timelex_sort(dir_str, dir_array, dir_count, flag_t);
+    print_str_array(dir_array, dir_count);
 }
 
 int main(int ac, char** av) {
-    bool flagA = false;
-    bool flagT = false;
-    int allFilesCount = 0;
-    int allDirsCount = 0;
+    bool flag_a = false;
+    bool flag_t = false;
+    int all_files_count = 0;
+    int all_dirs_count = 0;
 
     
-    int countFlags = setFlags(ac, av, &flagA, &flagT);
-    //printf("Count: %d, Flag A ist set: %d, Flag T is set: %d\n",countFlags, flagA, flagT);
+    int count_flags = set_flags(ac, av, &flag_a, &flag_t);
 
-    bool hasOperands = ac > countFlags + 1;
-    if (hasOperands) {
+    bool has_operands = ac > count_flags + 1;
+    if (has_operands) {
         char arguments[ac][MAX_LEN];
         for (int i = 0; i < ac; i++) {
             my_str_copy(arguments[i], av[i]);
         }
-        setAllFilesAndDirsCount(&allFilesCount, &allDirsCount, countFlags, ac, arguments);
-        char allFiles_array[allFilesCount][MAX_LEN];
-        char allDirs_array[allDirsCount][MAX_LEN];
-        fillFileAndDirArrays(allFiles_array, allDirs_array, countFlags, ac, arguments);
+        set_all_files_and_dirs_count(&all_files_count, &all_dirs_count, count_flags, ac, arguments);
+        char all_files_array[all_files_count][MAX_LEN];
+        char all_dirs_array[all_dirs_count][MAX_LEN];
+        fill_file_and_dir_arrays(all_files_array, all_dirs_array, count_flags, ac, arguments);
 
-        lex_or_timelex_sort(".", allFiles_array, allFilesCount, flagT);      
+        lex_or_timelex_sort(".", all_files_array, all_files_count, flag_t);      
 
-        print_str_array(allFiles_array, allFilesCount);
-        if (allFilesCount > 0) {
+        print_str_array(all_files_array, all_files_count);
+        if (all_files_count > 0) {
             printf("\n");
         }
 
-        lex_or_timelex_sort(".", allDirs_array, allDirsCount, flagT);
-        for (int i = 0; i < allDirsCount; i++) {
-            char* dir = allDirs_array[i];
-            if (allDirsCount > 1) {
+        lex_or_timelex_sort(".", all_dirs_array, all_dirs_count, flag_t);
+        for (int i = 0; i < all_dirs_count; i++) {
+            char* dir = all_dirs_array[i];
+            if (all_dirs_count > 1) {
                 printf("%s:\n", dir);
             }
-            printDirEntries(dir, flagA, flagT);
-            if (i < allDirsCount - 1) {
+            print_dir_entries(dir, flag_a, flag_t);
+            if (i < all_dirs_count - 1) {
                 printf("\n");
             } 
         }
 
     } else {
-        printDirEntries(".", flagA, flagT);
+        print_dir_entries(".", flag_a, flag_t);
     }
 }

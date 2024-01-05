@@ -40,22 +40,22 @@ void print_str_array(char str_array[][MAX_LEN], int str_count) {
     }
 }
 
-int my_str_cmp(char* strA, char* strB) {
-    if (my_str_eql(strA, strB)) {
+int my_str_cmp(char* str_a, char* str_b) {
+    if (my_str_eql(str_a, str_b)) {
         return 0;
     }
 
     bool is_a_shorter = true;
-    int min_len = my_str_len(strA);
-    if (my_str_len(strB) < min_len) {
-        min_len = my_str_len(strB);
+    int min_len = my_str_len(str_a);
+    if (my_str_len(str_b) < min_len) {
+        min_len = my_str_len(str_b);
         is_a_shorter = false;
     }
     
     for (int i = 0; i < min_len; i++) {
-        if (strA[i] > strB[i]) {
+        if (str_a[i] > str_b[i]) {
             return 1;
-        } else if (strA[i] < strB[i]) {
+        } else if (str_a[i] < str_b[i]) {
             return -1;
         }
     }

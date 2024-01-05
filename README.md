@@ -2,23 +2,32 @@
 ***
 
 ## Task
-The problem is to program the functionality of the command line tool ls with the optional -a and -t
+Implement a simplified "ls" command in C.
 
 ## Description
-I broke it down into a helper my_string.c file and the main my_ls.c file with corresponding header files.
+This C program provides a basic "ls" functionality with options to display hidden files ("-a") and sort by modification time ("-t").
 
 ## Installation
-To install the my_ls project run make
+Clone the repository.
+Compile using a C compiler:
+--gcc my_ls.c -o my_ls--
+Run:
+--./my_ls [options] [operands]--
 
 ## Usage
-It works with running:
-```
-make (and then)
-./my_ls [-at] [file ...]
-```
+-a: Show hidden files.
+-t: Sort by modification time.
+
+Examples:
+List current directory:
+--./my_ls--
+List all files, sorted by modification time:
+--./my_ls -at--
+List a specific directory:
+--./my_ls /path/to/directory--
 
 ### The Core Team
-Dennis Schmidt
+only me with the help of my friend
 
 <span><i>Made at <a href='https://qwasar.io'>Qwasar SV -- Software Engineering School</a></i></span>
 <span><img alt='Qwasar SV -- Software Engineering Schools Logo' src='https://storage.googleapis.com/qwasar-public/qwasar-logo_50x50.png' width='20px'></span>

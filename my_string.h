@@ -9,7 +9,7 @@ int my_str_len(char* str);
 int my_str_eql(char* str1, char* str2);
 char* my_str_cat(char *str1, const char *str2);
 void print_str_array(char str_array[][MAX_LEN], int str_count);
-int my_str_cmp(char* strA, char* strB);
+int my_str_cmp(char* str_a, char* str_b);
 void my_str_copy(char dest[MAX_LEN], char*src);
 
 #endif
