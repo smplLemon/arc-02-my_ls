@@ -21,7 +21,7 @@ int my_strlen(char* str){
     return i;
 }
 
-int my_strcmp(const char* a, const char* b){
+int my_strcmp( char* a, char* b){
     int len = my_strlen(a), i = 0;
     int len2 = my_strlen(b);
     if(len != len2)
@@ -29,6 +29,7 @@ int my_strcmp(const char* a, const char* b){
     while(a[i]){
         if(a[i] != b[i])
             return 1;
+        i++;
     }
     return 0;
 }
